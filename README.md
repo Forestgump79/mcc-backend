@@ -72,6 +72,51 @@ Luego prueba:
 
 ---
 
+## Pasos simples (nivel principiante) para dejarla funcionando
+
+Si es tu primera vez, sigue **exactamente** este orden:
+
+1. **Descarga o abre este proyecto** en tu computadora.
+2. **Abre una terminal dentro de la carpeta** `mcc-backend`.
+3. **Verifica Python**:
+   - Linux/Mac: `python3 --version`
+   - Windows: `py --version`
+4. **Crea entorno virtual** (aisla dependencias del proyecto).
+5. **Activa el entorno virtual**.
+6. **Instala dependencias** con `pip install -r requirements.txt`.
+7. **Inicia el servidor** con `python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000`.
+8. Abre en navegador:
+   - `http://localhost:8000/` (frontend)
+   - `http://localhost:8000/docs` (API)
+
+Si ves en la terminal `Uvicorn running on ...`, la app ya está funcionando.
+
+### Comandos para copiar y pegar
+
+#### Linux/macOS
+
+```bash
+cd /ruta/a/mcc-backend
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+#### Windows PowerShell
+
+```powershell
+cd C:\ruta\a\mcc-backend
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+---
+
 ## Setup según tu sistema
 
 ### Opción A — Linux / macOS (bash, zsh)
