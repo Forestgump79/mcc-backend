@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCC App - Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #0b1020; color: #e7ecff; }
+    .container { max-width: 980px; margin: 0 auto; padding: 24px; }
+    .card { background: #131a33; border: 1px solid #29315a; border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+    input, button { padding: 8px 10px; border-radius: 8px; border: 1px solid #39406e; background: #0f1530; color: #e7ecff; }
+    button { cursor: pointer; background: #2356ff; border-color: #2356ff; }
+    pre { background: #0a0f24; padding: 12px; border-radius: 8px; overflow: auto; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .muted { color: #b4bde8; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MCC Trading Dashboard (demo)</h1>
+    <p class="muted">Este frontend básico consume tu backend para contexto, señales y backtesting.</p>
+
+    <div class="card">
+      <h3>Parámetros</h3>
+      <div class="row">
+        <input id="symbol" value="BTC/USDT" />
+        <input id="timeframe" value="1h" />
+        <input id="lookback" type="number" value="300" />
+        <button onclick="loadAll()">Consultar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Health</h3>
+      <pre id="health">Cargando...</pre>
+    </div>
+
+    <div class="card">
+      <h3>Señal sugerida</h3>
+      <pre id="signal">-</pre>
+    </div>
+
+    <div class="card">
+      <h3>Backtest (SMA 20/50)</h3>
+      <pre id="backtest">-</pre>
+    </div>
+  </div>
+
+  <script>
+    async function getJSON(url, options) {
+      const r = await fetch(url, options);
+      const data = await r.json();
+      if (!r.ok) throw new Error(JSON.stringify(data));
+      return data;
+    }
+
+    async function loadHealth() {
+      try {
+        const data = await getJSON('/health');
+        document.getElementById('health').textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        document.getElementById('health').textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function loadSignal(symbol, timeframe, lookback) {
+      try {
+        const url = `/mcc/signals?symbol=${encodeURIComponent(symbol)}&timeframe=${encodeURIComponent(timeframe)}&lookback_bars=${lookback}`;
+        const data = await getJSON(url);
+        document.getElementById('signal').textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        document.getElementById('signal').textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function loadBacktest(symbol, timeframe, lookback) {
+      try {
+        const data = await getJSON('/mcc/backtest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            symbol,
+            timeframe,
+            lookback_bars: Number(lookback),
+            fast_period: 20,
+            slow_period: 50,
+            fee_bps: 4
+          })
+        });
+        document.getElementById('backtest').textContent = JSON.stringify(data.metrics, null, 2);
+      } catch (e) {
+        document.getElementById('backtest').textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function loadAll() {
+      const symbol = document.getElementById('symbol').value;
+      const timeframe = document.getElementById('timeframe').value;
+      const lookback = document.getElementById('lookback').value;
+      await loadSignal(symbol, timeframe, lookback);
+      await loadBacktest(symbol, timeframe, lookback);
+    }
+
+    loadHealth();
+    loadAll();
+  </script>
+</body>
+</html>
