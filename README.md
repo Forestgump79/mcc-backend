@@ -72,6 +72,45 @@ Luego prueba:
 
 ---
 
+## ¿Cómo descargo los archivos del proyecto?
+
+Perfecta pregunta. Tienes 2 formas simples:
+
+### Opción 1 (la más fácil): descargar ZIP desde GitHub
+
+1. En GitHub, entra al repositorio.
+2. Haz clic en **Code** (botón verde).
+3. Clic en **Download ZIP**.
+4. Descomprime el ZIP en una carpeta de tu PC.
+5. Abre una terminal dentro de esa carpeta (la que contiene `main.py` y `requirements.txt`).
+
+### Opción 2 (recomendada): clonar con Git
+
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd mcc-backend
+```
+
+> En `<URL_DEL_REPOSITORIO>` va el enlace del repo (por ejemplo HTTPS de GitHub).
+
+### ¿Cómo verifico que descargué bien?
+
+Dentro de la carpeta del proyecto, ejecuta:
+
+```bash
+# Linux/macOS
+pwd
+ls
+
+# Windows PowerShell
+Get-Location
+dir
+```
+
+Debes ver archivos como `main.py`, `requirements.txt`, `README.md` y carpeta `frontend/`.
+
+---
+
 ## Pasos simples (nivel principiante) para dejarla funcionando
 
 Si es tu primera vez, sigue **exactamente** este orden:
